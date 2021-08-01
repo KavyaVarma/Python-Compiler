@@ -9,6 +9,19 @@ Code Implements A Mini Compiler for Python:
 
 ## Usage
 
+### Running a Python Script:
+The bash file ./run.sh is used to run any give script.
+./run.sh [-p] [-t] [-i] [-o] sample.py
+	-p: Parsing
+	-t: Abstract Syntax Tree
+	-i: Intermediate Code Generation
+	-o: Code Optimization
+
+example: 
+```
+./run.sh -p -t -i -o sample.py
+```
+
 ### Sample Test Cases:
 The sample test cases can be run using the bash files listed below:
 ```
@@ -26,13 +39,3 @@ show_icg.sh
 ```
 show_optimization.sh
 ```
-
-Running a Python Script:
-	The bash file ./run.sh is used to run any give script.
-	./run.sh [-p] [-t] [-i] [-o] sample.py
-		-p: Parsing
-		-t: Abstract Syntax Tree
-		-i: Intermediate Code Generation
-		-o: Code Optimization
-
-	example: ./run.sh -p -t -i -o sample.py
