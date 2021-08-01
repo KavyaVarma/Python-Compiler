@@ -1,0 +1,6 @@
+a = 9
+b = a**2
+c = (a+b)/9
+d = "sample" + "string"
+e = False
+f = [1,2,3,[4,5,6]]

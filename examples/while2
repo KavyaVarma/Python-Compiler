@@ -1,0 +1,5 @@
+a = 1
+b = 15
+while a>0 and a<10 or b>5 and b<10:
+	a = a+1
+	b = b-1

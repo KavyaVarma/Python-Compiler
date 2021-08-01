@@ -1,0 +1,1624 @@
+Terminals unused in grammar
+
+   T_FROM
+   T_NOT
+   T_WITH
+   T_ELSE
+   T_IF
+   T_RETURN
+   T_DEF
+   T_AS
+   T_SEMICOLON
+
+
+Grammar
+
+    0 $accept: P $end
+
+    1 @1: %empty
+
+    2 P: @1 all_stmt T_EOF
+
+    3 literal: T_INTEGER
+    4        | T_FLOAT
+    5        | T_STRING
+    6        | T_BOOLEAN
+    7        | list_stmt
+
+    8 indexes: T_OPENS T_INTEGER T_CLOSES indexes
+    9        | %empty
+
+   10 all_stmt: simple_stmt line all_stmt
+
+   11 @2: %empty
+
+   12 $@3: %empty
+
+   13 all_stmt: @2 compound_stmt line suite $@3 all_stmt
+   14         | %empty
+
+   15 compound_stmt: while_stmt
+   16              | for_stmt
+
+   17 suite: indent all_stmt dedent
+   18      | line suite
+
+   19 line: T_NEWLINE
+
+   20 indent: T_INDENT
+
+   21 dedent: T_DEDENT
+
+   22 simple_stmt: print_stmt
+   23            | assignment_stmt
+   24            | break_stmt
+   25            | continue_stmt
+   26            | import_stmt
+   27            | aug_assignment_stmt
+   28            | %empty
+
+   29 print_stmt: T_PRINT T_OPENP print_list T_CLOSEP
+
+   30 print_list: expression_stmt T_COMMA print_list
+   31           | expression_stmt
+
+   32 assignment_stmt: T_IDENTIFIER indexes T_EQUAL expression_stmt
+
+   33 list_stmt: T_OPENS item T_CLOSES
+   34          | T_OPENS T_CLOSES
+
+   35 item: list_literal T_COMMA item
+   36     | list_literal
+
+   37 list_literal: T_INTEGER
+   38             | T_FLOAT
+   39             | list_stmt
+
+   40 break_stmt: T_BREAK
+
+   41 continue_stmt: T_CONTINUE
+
+   42 import_stmt: T_IMPORT import_list
+
+   43 import_list: T_IDENTIFIER T_COMMA import_list
+   44            | T_IDENTIFIER
+
+   45 aug_assignment_stmt: T_IDENTIFIER arith_operator T_EQUAL expression_stmt
+
+   46 arith_operator: T_PLUS
+   47               | T_MINUS
+   48               | T_STAR
+   49               | T_POWER
+   50               | T_DIVIDE
+   51               | T_MOD
+
+   52 @4: %empty
+
+   53 condition: condition T_OR @4 condition_and
+
+   54 @5: %empty
+
+   55 condition: @5 condition_and
+
+   56 @6: %empty
+
+   57 condition_and: expression_stmt comp_operator expression_stmt T_AND @6 condition_and
+   58              | expression_stmt comp_operator expression_stmt
+
+   59 comp_operator: T_LESSER
+   60              | T_GREATER
+   61              | T_EQUAL T_EQUAL
+   62              | T_GREATER T_EQUAL
+   63              | T_LESSER T_EQUAL
+   64              | T_NO T_EQUAL
+
+   65 expression_stmt: expression_stmt T_PLUS term
+   66                | expression_stmt T_MINUS term
+   67                | term
+
+   68 term: term T_STAR factor
+   69     | term T_DIVIDE factor
+   70     | term T_MOD factor
+   71     | factor
+
+   72 factor: power T_POWER factor
+   73       | power
+
+   74 power: T_OPENP expression_stmt T_CLOSEP
+   75      | literal
+   76      | T_IDENTIFIER indexes
+
+   77 @7: %empty
+
+   78 while_stmt: T_WHILE @7 condition T_COLON
+
+   79 @8: %empty
+
+   80 for_stmt: T_FOR T_IDENTIFIER T_IN @8 range_stmt T_COLON
+
+   81 range_stmt: T_RANGE T_OPENP T_INTEGER T_COMMA T_INTEGER T_CLOSEP
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+T_OR (258) 53
+T_AND (259) 57
+T_BOOLEAN (260) 6
+T_INTEGER (261) 3 8 37 81
+T_IDENTIFIER (262) 32 43 44 45 76 80
+T_STRING (263) 5
+T_FLOAT (264) 4 38
+T_FROM (265)
+T_NOT (266)
+T_WHILE (267) 78
+T_WITH (268)
+T_ELSE (269)
+T_IF (270)
+T_BREAK (271) 40
+T_IN (272) 80
+T_CONTINUE (273) 41
+T_RETURN (274)
+T_DEF (275)
+T_FOR (276) 80
+T_IMPORT (277) 42
+T_AS (278)
+T_PRINT (279) 29
+T_PLUS (280) 46 65
+T_MINUS (281) 47 66
+T_POWER (282) 49 72
+T_STAR (283) 48 68
+T_DIVIDE (284) 50 69
+T_MOD (285) 51 70
+T_OPENP (286) 29 74 81
+T_CLOSEP (287) 29 74 81
+T_OPENS (288) 8 33 34
+T_CLOSES (289) 8 33 34
+T_EQUAL (290) 32 45 61 62 63 64
+T_COMMA (291) 30 35 43 81
+T_INDENT (292) 20
+T_LESSER (293) 59 63
+T_GREATER (294) 60 62
+T_NO (295) 64
+T_NEWLINE (296) 19
+T_COLON (297) 78 80
+T_RANGE (298) 81
+T_DEDENT (299) 21
+T_EOF (300) 2
+T_SEMICOLON (301)
+
+
+Nonterminals, with rules where they appear
+
+$accept (47)
+    on left: 0
+P (48)
+    on left: 2, on right: 0
+@1 (49)
+    on left: 1, on right: 2
+literal (50)
+    on left: 3 4 5 6 7, on right: 75
+indexes (51)
+    on left: 8 9, on right: 8 32 76
+all_stmt (52)
+    on left: 10 13 14, on right: 2 10 13 17
+@2 (53)
+    on left: 11, on right: 13
+$@3 (54)
+    on left: 12, on right: 13
+compound_stmt (55)
+    on left: 15 16, on right: 13
+suite (56)
+    on left: 17 18, on right: 13 18
+line (57)
+    on left: 19, on right: 10 13 18
+indent (58)
+    on left: 20, on right: 17
+dedent (59)
+    on left: 21, on right: 17
+simple_stmt (60)
+    on left: 22 23 24 25 26 27 28, on right: 10
+print_stmt (61)
+    on left: 29, on right: 22
+print_list (62)
+    on left: 30 31, on right: 29 30
+assignment_stmt (63)
+    on left: 32, on right: 23
+list_stmt (64)
+    on left: 33 34, on right: 7 39
+item (65)
+    on left: 35 36, on right: 33 35
+list_literal (66)
+    on left: 37 38 39, on right: 35 36
+break_stmt (67)
+    on left: 40, on right: 24
+continue_stmt (68)
+    on left: 41, on right: 25
+import_stmt (69)
+    on left: 42, on right: 26
+import_list (70)
+    on left: 43 44, on right: 42 43
+aug_assignment_stmt (71)
+    on left: 45, on right: 27
+arith_operator (72)
+    on left: 46 47 48 49 50 51, on right: 45
+condition (73)
+    on left: 53 55, on right: 53 78
+@4 (74)
+    on left: 52, on right: 53
+@5 (75)
+    on left: 54, on right: 55
+condition_and (76)
+    on left: 57 58, on right: 53 55 57
+@6 (77)
+    on left: 56, on right: 57
+comp_operator (78)
+    on left: 59 60 61 62 63 64, on right: 57 58
+expression_stmt (79)
+    on left: 65 66 67, on right: 30 31 32 45 57 58 65 66 74
+term (80)
+    on left: 68 69 70 71, on right: 65 66 67 68 69 70
+factor (81)
+    on left: 72 73, on right: 68 69 70 71 72
+power (82)
+    on left: 74 75 76, on right: 72 73
+while_stmt (83)
+    on left: 78, on right: 15
+@7 (84)
+    on left: 77, on right: 78
+for_stmt (85)
+    on left: 80, on right: 16
+@8 (86)
+    on left: 79, on right: 80
+range_stmt (87)
+    on left: 81, on right: 80
+
+
+State 0
+
+    0 $accept: . P $end
+
+    $default  reduce using rule 1 (@1)
+
+    P   go to state 1
+    @1  go to state 2
+
+
+State 1
+
+    0 $accept: P . $end
+
+    $end  shift, and go to state 3
+
+
+State 2
+
+    2 P: @1 . all_stmt T_EOF
+
+    T_IDENTIFIER  shift, and go to state 4
+    T_BREAK       shift, and go to state 5
+    T_CONTINUE    shift, and go to state 6
+    T_IMPORT      shift, and go to state 7
+    T_PRINT       shift, and go to state 8
+
+    T_NEWLINE  reduce using rule 28 (simple_stmt)
+    T_EOF      reduce using rule 14 (all_stmt)
+    $default   reduce using rule 11 (@2)
+
+    all_stmt             go to state 9
+    @2                   go to state 10
+    simple_stmt          go to state 11
+    print_stmt           go to state 12
+    assignment_stmt      go to state 13
+    break_stmt           go to state 14
+    continue_stmt        go to state 15
+    import_stmt          go to state 16
+    aug_assignment_stmt  go to state 17
+
+
+State 3
+
+    0 $accept: P $end .
+
+    $default  accept
+
+
+State 4
+
+   32 assignment_stmt: T_IDENTIFIER . indexes T_EQUAL expression_stmt
+   45 aug_assignment_stmt: T_IDENTIFIER . arith_operator T_EQUAL expression_stmt
+
+    T_PLUS    shift, and go to state 18
+    T_MINUS   shift, and go to state 19
+    T_POWER   shift, and go to state 20
+    T_STAR    shift, and go to state 21
+    T_DIVIDE  shift, and go to state 22
+    T_MOD     shift, and go to state 23
+    T_OPENS   shift, and go to state 24
+
+    $default  reduce using rule 9 (indexes)
+
+    indexes         go to state 25
+    arith_operator  go to state 26
+
+
+State 5
+
+   40 break_stmt: T_BREAK .
+
+    $default  reduce using rule 40 (break_stmt)
+
+
+State 6
+
+   41 continue_stmt: T_CONTINUE .
+
+    $default  reduce using rule 41 (continue_stmt)
+
+
+State 7
+
+   42 import_stmt: T_IMPORT . import_list
+
+    T_IDENTIFIER  shift, and go to state 27
+
+    import_list  go to state 28
+
+
+State 8
+
+   29 print_stmt: T_PRINT . T_OPENP print_list T_CLOSEP
+
+    T_OPENP  shift, and go to state 29
+
+
+State 9
+
+    2 P: @1 all_stmt . T_EOF
+
+    T_EOF  shift, and go to state 30
+
+
+State 10
+
+   13 all_stmt: @2 . compound_stmt line suite $@3 all_stmt
+
+    T_WHILE  shift, and go to state 31
+    T_FOR    shift, and go to state 32
+
+    compound_stmt  go to state 33
+    while_stmt     go to state 34
+    for_stmt       go to state 35
+
+
+State 11
+
+   10 all_stmt: simple_stmt . line all_stmt
+
+    T_NEWLINE  shift, and go to state 36
+
+    line  go to state 37
+
+
+State 12
+
+   22 simple_stmt: print_stmt .
+
+    $default  reduce using rule 22 (simple_stmt)
+
+
+State 13
+
+   23 simple_stmt: assignment_stmt .
+
+    $default  reduce using rule 23 (simple_stmt)
+
+
+State 14
+
+   24 simple_stmt: break_stmt .
+
+    $default  reduce using rule 24 (simple_stmt)
+
+
+State 15
+
+   25 simple_stmt: continue_stmt .
+
+    $default  reduce using rule 25 (simple_stmt)
+
+
+State 16
+
+   26 simple_stmt: import_stmt .
+
+    $default  reduce using rule 26 (simple_stmt)
+
+
+State 17
+
+   27 simple_stmt: aug_assignment_stmt .
+
+    $default  reduce using rule 27 (simple_stmt)
+
+
+State 18
+
+   46 arith_operator: T_PLUS .
+
+    $default  reduce using rule 46 (arith_operator)
+
+
+State 19
+
+   47 arith_operator: T_MINUS .
+
+    $default  reduce using rule 47 (arith_operator)
+
+
+State 20
+
+   49 arith_operator: T_POWER .
+
+    $default  reduce using rule 49 (arith_operator)
+
+
+State 21
+
+   48 arith_operator: T_STAR .
+
+    $default  reduce using rule 48 (arith_operator)
+
+
+State 22
+
+   50 arith_operator: T_DIVIDE .
+
+    $default  reduce using rule 50 (arith_operator)
+
+
+State 23
+
+   51 arith_operator: T_MOD .
+
+    $default  reduce using rule 51 (arith_operator)
+
+
+State 24
+
+    8 indexes: T_OPENS . T_INTEGER T_CLOSES indexes
+
+    T_INTEGER  shift, and go to state 38
+
+
+State 25
+
+   32 assignment_stmt: T_IDENTIFIER indexes . T_EQUAL expression_stmt
+
+    T_EQUAL  shift, and go to state 39
+
+
+State 26
+
+   45 aug_assignment_stmt: T_IDENTIFIER arith_operator . T_EQUAL expression_stmt
+
+    T_EQUAL  shift, and go to state 40
+
+
+State 27
+
+   43 import_list: T_IDENTIFIER . T_COMMA import_list
+   44            | T_IDENTIFIER .
+
+    T_COMMA  shift, and go to state 41
+
+    $default  reduce using rule 44 (import_list)
+
+
+State 28
+
+   42 import_stmt: T_IMPORT import_list .
+
+    $default  reduce using rule 42 (import_stmt)
+
+
+State 29
+
+   29 print_stmt: T_PRINT T_OPENP . print_list T_CLOSEP
+
+    T_BOOLEAN     shift, and go to state 42
+    T_INTEGER     shift, and go to state 43
+    T_IDENTIFIER  shift, and go to state 44
+    T_STRING      shift, and go to state 45
+    T_FLOAT       shift, and go to state 46
+    T_OPENP       shift, and go to state 47
+    T_OPENS       shift, and go to state 48
+
+    literal          go to state 49
+    print_list       go to state 50
+    list_stmt        go to state 51
+    expression_stmt  go to state 52
+    term             go to state 53
+    factor           go to state 54
+    power            go to state 55
+
+
+State 30
+
+    2 P: @1 all_stmt T_EOF .
+
+    $default  reduce using rule 2 (P)
+
+
+State 31
+
+   78 while_stmt: T_WHILE . @7 condition T_COLON
+
+    $default  reduce using rule 77 (@7)
+
+    @7  go to state 56
+
+
+State 32
+
+   80 for_stmt: T_FOR . T_IDENTIFIER T_IN @8 range_stmt T_COLON
+
+    T_IDENTIFIER  shift, and go to state 57
+
+
+State 33
+
+   13 all_stmt: @2 compound_stmt . line suite $@3 all_stmt
+
+    T_NEWLINE  shift, and go to state 36
+
+    line  go to state 58
+
+
+State 34
+
+   15 compound_stmt: while_stmt .
+
+    $default  reduce using rule 15 (compound_stmt)
+
+
+State 35
+
+   16 compound_stmt: for_stmt .
+
+    $default  reduce using rule 16 (compound_stmt)
+
+
+State 36
+
+   19 line: T_NEWLINE .
+
+    $default  reduce using rule 19 (line)
+
+
+State 37
+
+   10 all_stmt: simple_stmt line . all_stmt
+
+    T_IDENTIFIER  shift, and go to state 4
+    T_BREAK       shift, and go to state 5
+    T_CONTINUE    shift, and go to state 6
+    T_IMPORT      shift, and go to state 7
+    T_PRINT       shift, and go to state 8
+
+    T_NEWLINE  reduce using rule 28 (simple_stmt)
+    T_DEDENT   reduce using rule 14 (all_stmt)
+    T_EOF      reduce using rule 14 (all_stmt)
+    $default   reduce using rule 11 (@2)
+
+    all_stmt             go to state 59
+    @2                   go to state 10
+    simple_stmt          go to state 11
+    print_stmt           go to state 12
+    assignment_stmt      go to state 13
+    break_stmt           go to state 14
+    continue_stmt        go to state 15
+    import_stmt          go to state 16
+    aug_assignment_stmt  go to state 17
+
+
+State 38
+
+    8 indexes: T_OPENS T_INTEGER . T_CLOSES indexes
+
+    T_CLOSES  shift, and go to state 60
+
+
+State 39
+
+   32 assignment_stmt: T_IDENTIFIER indexes T_EQUAL . expression_stmt
+
+    T_BOOLEAN     shift, and go to state 42
+    T_INTEGER     shift, and go to state 43
+    T_IDENTIFIER  shift, and go to state 44
+    T_STRING      shift, and go to state 45
+    T_FLOAT       shift, and go to state 46
+    T_OPENP       shift, and go to state 47
+    T_OPENS       shift, and go to state 48
+
+    literal          go to state 49
+    list_stmt        go to state 51
+    expression_stmt  go to state 61
+    term             go to state 53
+    factor           go to state 54
+    power            go to state 55
+
+
+State 40
+
+   45 aug_assignment_stmt: T_IDENTIFIER arith_operator T_EQUAL . expression_stmt
+
+    T_BOOLEAN     shift, and go to state 42
+    T_INTEGER     shift, and go to state 43
+    T_IDENTIFIER  shift, and go to state 44
+    T_STRING      shift, and go to state 45
+    T_FLOAT       shift, and go to state 46
+    T_OPENP       shift, and go to state 47
+    T_OPENS       shift, and go to state 48
+
+    literal          go to state 49
+    list_stmt        go to state 51
+    expression_stmt  go to state 62
+    term             go to state 53
+    factor           go to state 54
+    power            go to state 55
+
+
+State 41
+
+   43 import_list: T_IDENTIFIER T_COMMA . import_list
+
+    T_IDENTIFIER  shift, and go to state 27
+
+    import_list  go to state 63
+
+
+State 42
+
+    6 literal: T_BOOLEAN .
+
+    $default  reduce using rule 6 (literal)
+
+
+State 43
+
+    3 literal: T_INTEGER .
+
+    $default  reduce using rule 3 (literal)
+
+
+State 44
+
+   76 power: T_IDENTIFIER . indexes
+
+    T_OPENS  shift, and go to state 24
+
+    $default  reduce using rule 9 (indexes)
+
+    indexes  go to state 64
+
+
+State 45
+
+    5 literal: T_STRING .
+
+    $default  reduce using rule 5 (literal)
+
+
+State 46
+
+    4 literal: T_FLOAT .
+
+    $default  reduce using rule 4 (literal)
+
+
+State 47
+
+   74 power: T_OPENP . expression_stmt T_CLOSEP
+
+    T_BOOLEAN     shift, and go to state 42
+    T_INTEGER     shift, and go to state 43
+    T_IDENTIFIER  shift, and go to state 44
+    T_STRING      shift, and go to state 45
+    T_FLOAT       shift, and go to state 46
+    T_OPENP       shift, and go to state 47
+    T_OPENS       shift, and go to state 48
+
+    literal          go to state 49
+    list_stmt        go to state 51
+    expression_stmt  go to state 65
+    term             go to state 53
+    factor           go to state 54
+    power            go to state 55
+
+
+State 48
+
+   33 list_stmt: T_OPENS . item T_CLOSES
+   34          | T_OPENS . T_CLOSES
+
+    T_INTEGER  shift, and go to state 66
+    T_FLOAT    shift, and go to state 67
+    T_OPENS    shift, and go to state 48
+    T_CLOSES   shift, and go to state 68
+
+    list_stmt     go to state 69
+    item          go to state 70
+    list_literal  go to state 71
+
+
+State 49
+
+   75 power: literal .
+
+    $default  reduce using rule 75 (power)
+
+
+State 50
+
+   29 print_stmt: T_PRINT T_OPENP print_list . T_CLOSEP
+
+    T_CLOSEP  shift, and go to state 72
+
+
+State 51
+
+    7 literal: list_stmt .
+
+    $default  reduce using rule 7 (literal)
+
+
+State 52
+
+   30 print_list: expression_stmt . T_COMMA print_list
+   31           | expression_stmt .
+   65 expression_stmt: expression_stmt . T_PLUS term
+   66                | expression_stmt . T_MINUS term
+
+    T_PLUS   shift, and go to state 73
+    T_MINUS  shift, and go to state 74
+    T_COMMA  shift, and go to state 75
+
+    $default  reduce using rule 31 (print_list)
+
+
+State 53
+
+   67 expression_stmt: term .
+   68 term: term . T_STAR factor
+   69     | term . T_DIVIDE factor
+   70     | term . T_MOD factor
+
+    T_STAR    shift, and go to state 76
+    T_DIVIDE  shift, and go to state 77
+    T_MOD     shift, and go to state 78
+
+    $default  reduce using rule 67 (expression_stmt)
+
+
+State 54
+
+   71 term: factor .
+
+    $default  reduce using rule 71 (term)
+
+
+State 55
+
+   72 factor: power . T_POWER factor
+   73       | power .
+
+    T_POWER  shift, and go to state 79
+
+    $default  reduce using rule 73 (factor)
+
+
+State 56
+
+   78 while_stmt: T_WHILE @7 . condition T_COLON
+
+    $default  reduce using rule 54 (@5)
+
+    condition  go to state 80
+    @5         go to state 81
+
+
+State 57
+
+   80 for_stmt: T_FOR T_IDENTIFIER . T_IN @8 range_stmt T_COLON
+
+    T_IN  shift, and go to state 82
+
+
+State 58
+
+   13 all_stmt: @2 compound_stmt line . suite $@3 all_stmt
+
+    T_INDENT   shift, and go to state 83
+    T_NEWLINE  shift, and go to state 36
+
+    suite   go to state 84
+    line    go to state 85
+    indent  go to state 86
+
+
+State 59
+
+   10 all_stmt: simple_stmt line all_stmt .
+
+    $default  reduce using rule 10 (all_stmt)
+
+
+State 60
+
+    8 indexes: T_OPENS T_INTEGER T_CLOSES . indexes
+
+    T_OPENS  shift, and go to state 24
+
+    $default  reduce using rule 9 (indexes)
+
+    indexes  go to state 87
+
+
+State 61
+
+   32 assignment_stmt: T_IDENTIFIER indexes T_EQUAL expression_stmt .
+   65 expression_stmt: expression_stmt . T_PLUS term
+   66                | expression_stmt . T_MINUS term
+
+    T_PLUS   shift, and go to state 73
+    T_MINUS  shift, and go to state 74
+
+    $default  reduce using rule 32 (assignment_stmt)
+
+
+State 62
+
+   45 aug_assignment_stmt: T_IDENTIFIER arith_operator T_EQUAL expression_stmt .
+   65 expression_stmt: expression_stmt . T_PLUS term
+   66                | expression_stmt . T_MINUS term
+
+    T_PLUS   shift, and go to state 73
+    T_MINUS  shift, and go to state 74
+
+    $default  reduce using rule 45 (aug_assignment_stmt)
+
+
+State 63
+
+   43 import_list: T_IDENTIFIER T_COMMA import_list .
+
+    $default  reduce using rule 43 (import_list)
+
+
+State 64
+
+   76 power: T_IDENTIFIER indexes .
+
+    $default  reduce using rule 76 (power)
+
+
+State 65
+
+   65 expression_stmt: expression_stmt . T_PLUS term
+   66                | expression_stmt . T_MINUS term
+   74 power: T_OPENP expression_stmt . T_CLOSEP
+
+    T_PLUS    shift, and go to state 73
+    T_MINUS   shift, and go to state 74
+    T_CLOSEP  shift, and go to state 88
+
+
+State 66
+
+   37 list_literal: T_INTEGER .
+
+    $default  reduce using rule 37 (list_literal)
+
+
+State 67
+
+   38 list_literal: T_FLOAT .
+
+    $default  reduce using rule 38 (list_literal)
+
+
+State 68
+
+   34 list_stmt: T_OPENS T_CLOSES .
+
+    $default  reduce using rule 34 (list_stmt)
+
+
+State 69
+
+   39 list_literal: list_stmt .
+
+    $default  reduce using rule 39 (list_literal)
+
+
+State 70
+
+   33 list_stmt: T_OPENS item . T_CLOSES
+
+    T_CLOSES  shift, and go to state 89
+
+
+State 71
+
+   35 item: list_literal . T_COMMA item
+   36     | list_literal .
+
+    T_COMMA  shift, and go to state 90
+
+    $default  reduce using rule 36 (item)
+
+
+State 72
+
+   29 print_stmt: T_PRINT T_OPENP print_list T_CLOSEP .
+
+    $default  reduce using rule 29 (print_stmt)
+
+
+State 73
+
+   65 expression_stmt: expression_stmt T_PLUS . term
+
+    T_BOOLEAN     shift, and go to state 42
+    T_INTEGER     shift, and go to state 43
+    T_IDENTIFIER  shift, and go to state 44
+    T_STRING      shift, and go to state 45
+    T_FLOAT       shift, and go to state 46
+    T_OPENP       shift, and go to state 47
+    T_OPENS       shift, and go to state 48
+
+    literal    go to state 49
+    list_stmt  go to state 51
+    term       go to state 91
+    factor     go to state 54
+    power      go to state 55
+
+
+State 74
+
+   66 expression_stmt: expression_stmt T_MINUS . term
+
+    T_BOOLEAN     shift, and go to state 42
+    T_INTEGER     shift, and go to state 43
+    T_IDENTIFIER  shift, and go to state 44
+    T_STRING      shift, and go to state 45
+    T_FLOAT       shift, and go to state 46
+    T_OPENP       shift, and go to state 47
+    T_OPENS       shift, and go to state 48
+
+    literal    go to state 49
+    list_stmt  go to state 51
+    term       go to state 92
+    factor     go to state 54
+    power      go to state 55
+
+
+State 75
+
+   30 print_list: expression_stmt T_COMMA . print_list
+
+    T_BOOLEAN     shift, and go to state 42
+    T_INTEGER     shift, and go to state 43
+    T_IDENTIFIER  shift, and go to state 44
+    T_STRING      shift, and go to state 45
+    T_FLOAT       shift, and go to state 46
+    T_OPENP       shift, and go to state 47
+    T_OPENS       shift, and go to state 48
+
+    literal          go to state 49
+    print_list       go to state 93
+    list_stmt        go to state 51
+    expression_stmt  go to state 52
+    term             go to state 53
+    factor           go to state 54
+    power            go to state 55
+
+
+State 76
+
+   68 term: term T_STAR . factor
+
+    T_BOOLEAN     shift, and go to state 42
+    T_INTEGER     shift, and go to state 43
+    T_IDENTIFIER  shift, and go to state 44
+    T_STRING      shift, and go to state 45
+    T_FLOAT       shift, and go to state 46
+    T_OPENP       shift, and go to state 47
+    T_OPENS       shift, and go to state 48
+
+    literal    go to state 49
+    list_stmt  go to state 51
+    factor     go to state 94
+    power      go to state 55
+
+
+State 77
+
+   69 term: term T_DIVIDE . factor
+
+    T_BOOLEAN     shift, and go to state 42
+    T_INTEGER     shift, and go to state 43
+    T_IDENTIFIER  shift, and go to state 44
+    T_STRING      shift, and go to state 45
+    T_FLOAT       shift, and go to state 46
+    T_OPENP       shift, and go to state 47
+    T_OPENS       shift, and go to state 48
+
+    literal    go to state 49
+    list_stmt  go to state 51
+    factor     go to state 95
+    power      go to state 55
+
+
+State 78
+
+   70 term: term T_MOD . factor
+
+    T_BOOLEAN     shift, and go to state 42
+    T_INTEGER     shift, and go to state 43
+    T_IDENTIFIER  shift, and go to state 44
+    T_STRING      shift, and go to state 45
+    T_FLOAT       shift, and go to state 46
+    T_OPENP       shift, and go to state 47
+    T_OPENS       shift, and go to state 48
+
+    literal    go to state 49
+    list_stmt  go to state 51
+    factor     go to state 96
+    power      go to state 55
+
+
+State 79
+
+   72 factor: power T_POWER . factor
+
+    T_BOOLEAN     shift, and go to state 42
+    T_INTEGER     shift, and go to state 43
+    T_IDENTIFIER  shift, and go to state 44
+    T_STRING      shift, and go to state 45
+    T_FLOAT       shift, and go to state 46
+    T_OPENP       shift, and go to state 47
+    T_OPENS       shift, and go to state 48
+
+    literal    go to state 49
+    list_stmt  go to state 51
+    factor     go to state 97
+    power      go to state 55
+
+
+State 80
+
+   53 condition: condition . T_OR @4 condition_and
+   78 while_stmt: T_WHILE @7 condition . T_COLON
+
+    T_OR     shift, and go to state 98
+    T_COLON  shift, and go to state 99
+
+
+State 81
+
+   55 condition: @5 . condition_and
+
+    T_BOOLEAN     shift, and go to state 42
+    T_INTEGER     shift, and go to state 43
+    T_IDENTIFIER  shift, and go to state 44
+    T_STRING      shift, and go to state 45
+    T_FLOAT       shift, and go to state 46
+    T_OPENP       shift, and go to state 47
+    T_OPENS       shift, and go to state 48
+
+    literal          go to state 49
+    list_stmt        go to state 51
+    condition_and    go to state 100
+    expression_stmt  go to state 101
+    term             go to state 53
+    factor           go to state 54
+    power            go to state 55
+
+
+State 82
+
+   80 for_stmt: T_FOR T_IDENTIFIER T_IN . @8 range_stmt T_COLON
+
+    $default  reduce using rule 79 (@8)
+
+    @8  go to state 102
+
+
+State 83
+
+   20 indent: T_INDENT .
+
+    $default  reduce using rule 20 (indent)
+
+
+State 84
+
+   13 all_stmt: @2 compound_stmt line suite . $@3 all_stmt
+
+    $default  reduce using rule 12 ($@3)
+
+    $@3  go to state 103
+
+
+State 85
+
+   18 suite: line . suite
+
+    T_INDENT   shift, and go to state 83
+    T_NEWLINE  shift, and go to state 36
+
+    suite   go to state 104
+    line    go to state 85
+    indent  go to state 86
+
+
+State 86
+
+   17 suite: indent . all_stmt dedent
+
+    T_IDENTIFIER  shift, and go to state 4
+    T_BREAK       shift, and go to state 5
+    T_CONTINUE    shift, and go to state 6
+    T_IMPORT      shift, and go to state 7
+    T_PRINT       shift, and go to state 8
+
+    T_NEWLINE  reduce using rule 28 (simple_stmt)
+    T_DEDENT   reduce using rule 14 (all_stmt)
+    $default   reduce using rule 11 (@2)
+
+    all_stmt             go to state 105
+    @2                   go to state 10
+    simple_stmt          go to state 11
+    print_stmt           go to state 12
+    assignment_stmt      go to state 13
+    break_stmt           go to state 14
+    continue_stmt        go to state 15
+    import_stmt          go to state 16
+    aug_assignment_stmt  go to state 17
+
+
+State 87
+
+    8 indexes: T_OPENS T_INTEGER T_CLOSES indexes .
+
+    $default  reduce using rule 8 (indexes)
+
+
+State 88
+
+   74 power: T_OPENP expression_stmt T_CLOSEP .
+
+    $default  reduce using rule 74 (power)
+
+
+State 89
+
+   33 list_stmt: T_OPENS item T_CLOSES .
+
+    $default  reduce using rule 33 (list_stmt)
+
+
+State 90
+
+   35 item: list_literal T_COMMA . item
+
+    T_INTEGER  shift, and go to state 66
+    T_FLOAT    shift, and go to state 67
+    T_OPENS    shift, and go to state 48
+
+    list_stmt     go to state 69
+    item          go to state 106
+    list_literal  go to state 71
+
+
+State 91
+
+   65 expression_stmt: expression_stmt T_PLUS term .
+   68 term: term . T_STAR factor
+   69     | term . T_DIVIDE factor
+   70     | term . T_MOD factor
+
+    T_STAR    shift, and go to state 76
+    T_DIVIDE  shift, and go to state 77
+    T_MOD     shift, and go to state 78
+
+    $default  reduce using rule 65 (expression_stmt)
+
+
+State 92
+
+   66 expression_stmt: expression_stmt T_MINUS term .
+   68 term: term . T_STAR factor
+   69     | term . T_DIVIDE factor
+   70     | term . T_MOD factor
+
+    T_STAR    shift, and go to state 76
+    T_DIVIDE  shift, and go to state 77
+    T_MOD     shift, and go to state 78
+
+    $default  reduce using rule 66 (expression_stmt)
+
+
+State 93
+
+   30 print_list: expression_stmt T_COMMA print_list .
+
+    $default  reduce using rule 30 (print_list)
+
+
+State 94
+
+   68 term: term T_STAR factor .
+
+    $default  reduce using rule 68 (term)
+
+
+State 95
+
+   69 term: term T_DIVIDE factor .
+
+    $default  reduce using rule 69 (term)
+
+
+State 96
+
+   70 term: term T_MOD factor .
+
+    $default  reduce using rule 70 (term)
+
+
+State 97
+
+   72 factor: power T_POWER factor .
+
+    $default  reduce using rule 72 (factor)
+
+
+State 98
+
+   53 condition: condition T_OR . @4 condition_and
+
+    $default  reduce using rule 52 (@4)
+
+    @4  go to state 107
+
+
+State 99
+
+   78 while_stmt: T_WHILE @7 condition T_COLON .
+
+    $default  reduce using rule 78 (while_stmt)
+
+
+State 100
+
+   55 condition: @5 condition_and .
+
+    $default  reduce using rule 55 (condition)
+
+
+State 101
+
+   57 condition_and: expression_stmt . comp_operator expression_stmt T_AND @6 condition_and
+   58              | expression_stmt . comp_operator expression_stmt
+   65 expression_stmt: expression_stmt . T_PLUS term
+   66                | expression_stmt . T_MINUS term
+
+    T_PLUS     shift, and go to state 73
+    T_MINUS    shift, and go to state 74
+    T_EQUAL    shift, and go to state 108
+    T_LESSER   shift, and go to state 109
+    T_GREATER  shift, and go to state 110
+    T_NO       shift, and go to state 111
+
+    comp_operator  go to state 112
+
+
+State 102
+
+   80 for_stmt: T_FOR T_IDENTIFIER T_IN @8 . range_stmt T_COLON
+
+    T_RANGE  shift, and go to state 113
+
+    range_stmt  go to state 114
+
+
+State 103
+
+   13 all_stmt: @2 compound_stmt line suite $@3 . all_stmt
+
+    T_IDENTIFIER  shift, and go to state 4
+    T_BREAK       shift, and go to state 5
+    T_CONTINUE    shift, and go to state 6
+    T_IMPORT      shift, and go to state 7
+    T_PRINT       shift, and go to state 8
+
+    T_NEWLINE  reduce using rule 28 (simple_stmt)
+    T_DEDENT   reduce using rule 14 (all_stmt)
+    T_EOF      reduce using rule 14 (all_stmt)
+    $default   reduce using rule 11 (@2)
+
+    all_stmt             go to state 115
+    @2                   go to state 10
+    simple_stmt          go to state 11
+    print_stmt           go to state 12
+    assignment_stmt      go to state 13
+    break_stmt           go to state 14
+    continue_stmt        go to state 15
+    import_stmt          go to state 16
+    aug_assignment_stmt  go to state 17
+
+
+State 104
+
+   18 suite: line suite .
+
+    $default  reduce using rule 18 (suite)
+
+
+State 105
+
+   17 suite: indent all_stmt . dedent
+
+    T_DEDENT  shift, and go to state 116
+
+    dedent  go to state 117
+
+
+State 106
+
+   35 item: list_literal T_COMMA item .
+
+    $default  reduce using rule 35 (item)
+
+
+State 107
+
+   53 condition: condition T_OR @4 . condition_and
+
+    T_BOOLEAN     shift, and go to state 42
+    T_INTEGER     shift, and go to state 43
+    T_IDENTIFIER  shift, and go to state 44
+    T_STRING      shift, and go to state 45
+    T_FLOAT       shift, and go to state 46
+    T_OPENP       shift, and go to state 47
+    T_OPENS       shift, and go to state 48
+
+    literal          go to state 49
+    list_stmt        go to state 51
+    condition_and    go to state 118
+    expression_stmt  go to state 101
+    term             go to state 53
+    factor           go to state 54
+    power            go to state 55
+
+
+State 108
+
+   61 comp_operator: T_EQUAL . T_EQUAL
+
+    T_EQUAL  shift, and go to state 119
+
+
+State 109
+
+   59 comp_operator: T_LESSER .
+   63              | T_LESSER . T_EQUAL
+
+    T_EQUAL  shift, and go to state 120
+
+    $default  reduce using rule 59 (comp_operator)
+
+
+State 110
+
+   60 comp_operator: T_GREATER .
+   62              | T_GREATER . T_EQUAL
+
+    T_EQUAL  shift, and go to state 121
+
+    $default  reduce using rule 60 (comp_operator)
+
+
+State 111
+
+   64 comp_operator: T_NO . T_EQUAL
+
+    T_EQUAL  shift, and go to state 122
+
+
+State 112
+
+   57 condition_and: expression_stmt comp_operator . expression_stmt T_AND @6 condition_and
+   58              | expression_stmt comp_operator . expression_stmt
+
+    T_BOOLEAN     shift, and go to state 42
+    T_INTEGER     shift, and go to state 43
+    T_IDENTIFIER  shift, and go to state 44
+    T_STRING      shift, and go to state 45
+    T_FLOAT       shift, and go to state 46
+    T_OPENP       shift, and go to state 47
+    T_OPENS       shift, and go to state 48
+
+    literal          go to state 49
+    list_stmt        go to state 51
+    expression_stmt  go to state 123
+    term             go to state 53
+    factor           go to state 54
+    power            go to state 55
+
+
+State 113
+
+   81 range_stmt: T_RANGE . T_OPENP T_INTEGER T_COMMA T_INTEGER T_CLOSEP
+
+    T_OPENP  shift, and go to state 124
+
+
+State 114
+
+   80 for_stmt: T_FOR T_IDENTIFIER T_IN @8 range_stmt . T_COLON
+
+    T_COLON  shift, and go to state 125
+
+
+State 115
+
+   13 all_stmt: @2 compound_stmt line suite $@3 all_stmt .
+
+    $default  reduce using rule 13 (all_stmt)
+
+
+State 116
+
+   21 dedent: T_DEDENT .
+
+    $default  reduce using rule 21 (dedent)
+
+
+State 117
+
+   17 suite: indent all_stmt dedent .
+
+    $default  reduce using rule 17 (suite)
+
+
+State 118
+
+   53 condition: condition T_OR @4 condition_and .
+
+    $default  reduce using rule 53 (condition)
+
+
+State 119
+
+   61 comp_operator: T_EQUAL T_EQUAL .
+
+    $default  reduce using rule 61 (comp_operator)
+
+
+State 120
+
+   63 comp_operator: T_LESSER T_EQUAL .
+
+    $default  reduce using rule 63 (comp_operator)
+
+
+State 121
+
+   62 comp_operator: T_GREATER T_EQUAL .
+
+    $default  reduce using rule 62 (comp_operator)
+
+
+State 122
+
+   64 comp_operator: T_NO T_EQUAL .
+
+    $default  reduce using rule 64 (comp_operator)
+
+
+State 123
+
+   57 condition_and: expression_stmt comp_operator expression_stmt . T_AND @6 condition_and
+   58              | expression_stmt comp_operator expression_stmt .
+   65 expression_stmt: expression_stmt . T_PLUS term
+   66                | expression_stmt . T_MINUS term
+
+    T_AND    shift, and go to state 126
+    T_PLUS   shift, and go to state 73
+    T_MINUS  shift, and go to state 74
+
+    $default  reduce using rule 58 (condition_and)
+
+
+State 124
+
+   81 range_stmt: T_RANGE T_OPENP . T_INTEGER T_COMMA T_INTEGER T_CLOSEP
+
+    T_INTEGER  shift, and go to state 127
+
+
+State 125
+
+   80 for_stmt: T_FOR T_IDENTIFIER T_IN @8 range_stmt T_COLON .
+
+    $default  reduce using rule 80 (for_stmt)
+
+
+State 126
+
+   57 condition_and: expression_stmt comp_operator expression_stmt T_AND . @6 condition_and
+
+    $default  reduce using rule 56 (@6)
+
+    @6  go to state 128
+
+
+State 127
+
+   81 range_stmt: T_RANGE T_OPENP T_INTEGER . T_COMMA T_INTEGER T_CLOSEP
+
+    T_COMMA  shift, and go to state 129
+
+
+State 128
+
+   57 condition_and: expression_stmt comp_operator expression_stmt T_AND @6 . condition_and
+
+    T_BOOLEAN     shift, and go to state 42
+    T_INTEGER     shift, and go to state 43
+    T_IDENTIFIER  shift, and go to state 44
+    T_STRING      shift, and go to state 45
+    T_FLOAT       shift, and go to state 46
+    T_OPENP       shift, and go to state 47
+    T_OPENS       shift, and go to state 48
+
+    literal          go to state 49
+    list_stmt        go to state 51
+    condition_and    go to state 130
+    expression_stmt  go to state 101
+    term             go to state 53
+    factor           go to state 54
+    power            go to state 55
+
+
+State 129
+
+   81 range_stmt: T_RANGE T_OPENP T_INTEGER T_COMMA . T_INTEGER T_CLOSEP
+
+    T_INTEGER  shift, and go to state 131
+
+
+State 130
+
+   57 condition_and: expression_stmt comp_operator expression_stmt T_AND @6 condition_and .
+
+    $default  reduce using rule 57 (condition_and)
+
+
+State 131
+
+   81 range_stmt: T_RANGE T_OPENP T_INTEGER T_COMMA T_INTEGER . T_CLOSEP
+
+    T_CLOSEP  shift, and go to state 132
+
+
+State 132
+
+   81 range_stmt: T_RANGE T_OPENP T_INTEGER T_COMMA T_INTEGER T_CLOSEP .
+
+    $default  reduce using rule 81 (range_stmt)
