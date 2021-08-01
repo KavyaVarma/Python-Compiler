@@ -10,15 +10,18 @@ Code Implements A Mini Compiler for Python:
 ## Usage
 
 ### Running a Python Script:
-The bash file ./run.sh is used to run any give script.
-./run.sh [-p] [-t] [-i] [-o] sample.py
+
+The bash file run.sh is used to run any give script.
+
+	run.sh [-p] [-t] [-i] [-o] sample.py
+
 	-p: Parsing
 	-t: Abstract Syntax Tree
 	-i: Intermediate Code Generation
 	-o: Code Optimization
 
 example: 
-```
+```shell
 ./run.sh -p -t -i -o sample.py
 ```
 
